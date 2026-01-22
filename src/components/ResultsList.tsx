@@ -20,46 +20,51 @@ export function ResultsList({
 }: ResultsListProps) {
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
-        <span className="ml-3 text-gray-600">Checking move compatibility...</span>
+      <div className="flex flex-col items-center justify-center py-12">
+        <div className="text-4xl animate-bounce">⏳</div>
+        <span className="mt-3 text-fuchsia-700 font-bold blink">Loading... Please wait!!</span>
+        <div className="mt-2 text-2xl">🔄</div>
       </div>
     );
   }
 
   if (!hasSearched) {
     return (
-      <div className="text-center py-12 text-gray-500">
-        <p>Add Pokemon and search for moves to see results</p>
+      <div className="text-center py-12">
+        <div className="text-6xl mb-4">🤔</div>
+        <p className="text-blue-700 font-bold text-lg">Add Pokemon and search for moves to see results!!</p>
+        <p className="text-fuchsia-600 mt-2">↑↑↑ Use the forms above ↑↑↑</p>
       </div>
     );
   }
 
   if (results.length === 0) {
     return (
-      <div className="text-center py-12 text-gray-500">
-        <p>No Pokemon found that can learn {logic === 'AND' ? 'all' : 'any'} of the selected moves</p>
+      <div className="text-center py-12">
+        <div className="text-6xl mb-4">😢</div>
+        <p className="text-red-600 font-bold text-lg">No Pokemon found that can learn {logic === 'AND' ? 'ALL' : 'ANY'} of the selected moves!!</p>
+        <p className="text-gray-600 mt-2">Try different moves or add more Pokemon!</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-gray-800">
-          Results ({results.length} Pokemon)
+      <div className="flex items-center justify-center bg-gradient-to-r from-lime-400 via-green-400 to-lime-400 border-2 border-black py-2">
+        <h2 className="text-lg font-bold text-black">
+          🎊 FOUND {results.length} POKEMON!! 🎊
         </h2>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2">
         {results.map(result => {
           const pokemonData = findPokemon(result.pokemon);
           return (
             <div
               key={result.pokemon}
-              className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
+              className="bg-gradient-to-b from-white to-gray-100 border-2 border-black p-3 shadow-[3px_3px_0_#000] hover:shadow-[5px_5px_0_#000] transition-shadow"
             >
-              <div className="flex items-center gap-3 mb-2">
+              <div className="flex items-center gap-3 mb-2 bg-gradient-to-r from-cyan-200 to-cyan-300 border-b-2 border-black p-2 -mx-3 -mt-3">
                 {pokemonData && (
                   <img
                     src={getPokemonSpriteUrl(pokemonData.num, pokemonData.id)}
@@ -70,23 +75,23 @@ export function ResultsList({
                     }}
                   />
                 )}
-                <h3 className="font-semibold text-gray-800">{result.pokemon}</h3>
+                <h3 className="font-bold text-blue-800 text-lg">★ {result.pokemon} ★</h3>
               </div>
-              <div className="space-y-1">
-                <span className="text-xs text-gray-500">Can learn:</span>
+              <div className="space-y-1 mt-2">
+                <span className="text-xs font-bold text-gray-700">Moves:</span>
                 <div className="flex flex-wrap gap-1">
                   {selectedMoves.map(move => {
                     const canLearnMove = result.learnableMoves.includes(move);
                     return (
                       <span
                         key={move}
-                        className={`px-2 py-0.5 rounded text-xs ${
+                        className={`px-2 py-0.5 border border-black text-xs font-bold ${
                           canLearnMove
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-red-100 text-red-800'
+                            ? 'bg-lime-300 text-green-900'
+                            : 'bg-red-300 text-red-900'
                         }`}
                       >
-                        {canLearnMove ? '\u2713' : '\u2717'} {move}
+                        {canLearnMove ? '✓' : '✗'} {move}
                       </span>
                     );
                   })}

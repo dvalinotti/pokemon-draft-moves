@@ -1,1 +1,189 @@
+@import url("https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap");
 @import "tailwindcss";
+
+/* Retro MySpace/Geocities Styling */
+:root {
+  --neon-pink: #ff00ff;
+  --neon-cyan: #00ffff;
+  --neon-lime: #00ff00;
+  --neon-yellow: #ffff00;
+  --hot-pink: #ff1493;
+  --electric-blue: #0000ff;
+}
+
+* {
+  font-family: "Comic Neue", "Comic Sans MS", cursive, sans-serif;
+}
+
+body {
+  background: #000033;
+  background-image: radial-gradient(
+      white,
+      rgba(255, 255, 255, 0.2) 2px,
+      transparent 2px
+    ),
+    radial-gradient(white, rgba(255, 255, 255, 0.15) 1px, transparent 1px),
+    radial-gradient(
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.1) 2px,
+      transparent 2px
+    );
+  background-size: 550px 550px, 350px 350px, 250px 250px;
+  background-position: 0 0, 40px 60px, 130px 270px;
+  min-height: 100vh;
+}
+
+/* Marquee animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.marquee {
+  animation: marquee 15s linear infinite;
+}
+
+/* Rainbow text animation */
+@keyframes rainbow {
+  0% {
+    color: #ff0000;
+  }
+  17% {
+    color: #ff8000;
+  }
+  33% {
+    color: #ffff00;
+  }
+  50% {
+    color: #00ff00;
+  }
+  67% {
+    color: #0080ff;
+  }
+  83% {
+    color: #8000ff;
+  }
+  100% {
+    color: #ff0000;
+  }
+}
+
+.rainbow-text {
+  animation: rainbow 3s linear infinite;
+}
+
+/* Blink animation */
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* Sparkle animation */
+@keyframes sparkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.sparkle::before,
+.sparkle::after {
+  content: "✨";
+  position: absolute;
+  animation: sparkle 1.5s ease-in-out infinite;
+}
+
+.sparkle::before {
+  left: -20px;
+  animation-delay: 0s;
+}
+
+.sparkle::after {
+  right: -20px;
+  animation-delay: 0.75s;
+}
+
+/* Retro button style */
+.retro-btn {
+  background: linear-gradient(180deg, #c0c0c0 0%, #808080 50%, #404040 100%);
+  border: 3px outset #c0c0c0;
+  box-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #404040,
+    2px 2px 0 #000000;
+  padding: 4px 12px;
+  font-weight: bold;
+  color: #000;
+}
+
+.retro-btn:active {
+  border-style: inset;
+  box-shadow: inset -1px -1px 0 #ffffff, inset 1px 1px 0 #404040;
+}
+
+/* Retro input style */
+.retro-input {
+  background: #ffffff;
+  border: 2px inset #808080;
+  box-shadow: inset 1px 1px 2px #404040;
+}
+
+/* Beveled panel */
+.retro-panel {
+  background: linear-gradient(135deg, #c0c0c0 0%, #e0e0e0 50%, #a0a0a0 100%);
+  border: 3px outset #c0c0c0;
+  box-shadow: inset 2px 2px 0 #ffffff, inset -2px -2px 0 #606060,
+    4px 4px 0 #000000;
+}
+
+/* Neon glow effect */
+.neon-glow {
+  text-shadow: 0 0 5px currentColor, 0 0 10px currentColor,
+    0 0 20px currentColor, 0 0 40px currentColor;
+}
+
+/* Fire text effect */
+@keyframes fire {
+  0% {
+    text-shadow: 0 0 4px #fff, 0 -5px 4px #ff3, 2px -10px 6px #fd3,
+      -2px -15px 11px #f80, 2px -25px 18px #f20;
+  }
+  25% {
+    text-shadow: 0 0 4px #fff, 2px -5px 4px #ff3, -2px -10px 6px #fd3,
+      2px -15px 11px #f80, -2px -25px 18px #f20;
+  }
+  50% {
+    text-shadow: 0 0 4px #fff, -2px -5px 4px #ff3, 2px -10px 6px #fd3,
+      -2px -15px 11px #f80, 2px -25px 18px #f20;
+  }
+  75% {
+    text-shadow: 0 0 4px #fff, 2px -5px 4px #ff3, -2px -10px 6px #fd3,
+      2px -15px 11px #f80, -2px -25px 18px #f20;
+  }
+  100% {
+    text-shadow: 0 0 4px #fff, 0 -5px 4px #ff3, 2px -10px 6px #fd3,
+      -2px -15px 11px #f80, 2px -25px 18px #f20;
+  }
+}
+
+.fire-text {
+  color: #fff;
+  animation: fire 0.8s ease-in-out infinite alternate;
+}
