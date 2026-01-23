@@ -1,14 +1,15 @@
 import { useMemo, useCallback } from 'react';
 import { Dex } from '@pkmn/dex';
 import { Generations } from '@pkmn/data';
-import type { PokemonData, MoveData } from '../types';
+import type { PokemonData, MoveData, GenerationNum } from '../types';
 
 const generations = new Generations(Dex);
-const gen9 = generations.get(9);
 
-export function usePokemonData() {
+export function usePokemonData(generationNum: GenerationNum = 9) {
+  const gen = useMemo(() => generations.get(generationNum), [generationNum]);
+
   const allPokemon = useMemo<PokemonData[]>(() => {
-    const species = Array.from(gen9.species);
+    const species = Array.from(gen.species);
     return species
       .filter(s => !s.isNonstandard && s.exists)
       .map(s => ({
@@ -17,10 +18,10 @@ export function usePokemonData() {
         num: s.num,
       }))
       .sort((a, b) => a.name.localeCompare(b.name));
-  }, []);
+  }, [gen]);
 
   const allMoves = useMemo<MoveData[]>(() => {
-    const moves = Array.from(gen9.moves);
+    const moves = Array.from(gen.moves);
     return moves
       .filter(m => !m.isNonstandard && m.exists)
       .map(m => ({
@@ -30,7 +31,7 @@ export function usePokemonData() {
         category: m.category,
       }))
       .sort((a, b) => a.name.localeCompare(b.name));
-  }, []);
+  }, [gen]);
 
   const findPokemon = useCallback((query: string): PokemonData | undefined => {
     const normalized = query.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -52,13 +53,24 @@ export function usePokemonData() {
 
       if (!pokemon || !move) return false;
 
-      const learnsets = gen9.learnsets;
-      const result = await learnsets.canLearn(pokemon.name, move.name);
-      return result;
+      // Get the learnset and check for sources from the selected generation
+      const learnset = await gen.learnsets.get(pokemon.name);
+      if (!learnset?.learnset) return false;
+
+      const moveId = move.id;
+      const sources = learnset.learnset[moveId];
+
+      if (!sources || !Array.isArray(sources)) return false;
+
+      // Check if any source starts with the generation number
+      // Sources are encoded like: 9M (TM), 9L10 (Level 10), 9E (Egg), 9T (Tutor), 9S (Special/Event)
+      const genPrefix = String(generationNum);
+      const hasGenSource = sources.some(source => source.startsWith(genPrefix));
+      return hasGenSource;
     } catch {
       return false;
     }
-  }, [allPokemon, allMoves]);
+  }, [allPokemon, allMoves, gen, generationNum]);
 
   return {
     allPokemon,

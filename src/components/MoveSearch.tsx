@@ -26,12 +26,14 @@ interface MoveSearchProps {
   allMoves: MoveData[];
   selectedMoves: string[];
   onMovesChange: (moves: string[]) => void;
+  isRetro?: boolean;
 }
 
 export function MoveSearch({
   allMoves,
   selectedMoves,
   onMovesChange,
+  isRetro = false,
 }: MoveSearchProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
@@ -68,9 +70,93 @@ export function MoveSearch({
     onMovesChange([]);
   };
 
+  if (isRetro) {
+    return (
+      <div className="space-y-4">
+        <h2 className="text-lg font-bold text-blue-700">💥 Search for Moves!! 💥</h2>
+
+        <div className="relative">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setShowDropdown(true);
+            }}
+            onFocus={() => setShowDropdown(true)}
+            placeholder="Type a move name..."
+            className="retro-input w-full px-3 py-2 text-black"
+          />
+          {showDropdown && filteredMoves.length > 0 && (
+            <ul className="absolute z-10 w-full mt-1 bg-white border-2 border-black max-h-60 overflow-auto shadow-[4px_4px_0_#000]">
+              {filteredMoves.map((move) => (
+                <li
+                  key={move.id}
+                  onClick={() => handleAddMove(move.name)}
+                  className="px-3 py-2 cursor-pointer hover:bg-yellow-300 flex items-center justify-between border-b border-gray-300"
+                >
+                  <span className="font-bold">{move.name}</span>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`px-2 py-0.5 border border-black text-xs text-white font-bold ${
+                        typeColors[move.type] || "bg-gray-500"
+                      }`}
+                    >
+                      {move.type}
+                    </span>
+                    <span className="text-xs font-bold text-gray-700">{move.category}</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {selectedMoves.length > 0 && (
+          <div className="space-y-2">
+            <div className="flex items-center justify-between bg-purple-200 border-2 border-purple-500 px-2 py-1">
+              <span className="text-sm font-bold text-purple-800">
+                ✨ {selectedMoves.length} move{selectedMoves.length !== 1 ? "s" : ""}{" "}
+                selected!! ✨
+              </span>
+              <button
+                onClick={handleClearAll}
+                className="text-sm text-red-600 hover:text-red-800 font-bold cursor-pointer underline"
+              >
+                [Clear All]
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-2 p-2 bg-gradient-to-b from-yellow-100 to-yellow-200 border-2 border-yellow-400">
+              {selectedMoves.map((moveName) => {
+                const moveData = getSelectedMoveData(moveName);
+                return (
+                  <span
+                    key={moveName}
+                    className={`inline-flex items-center gap-1 px-2 py-1 border-2 border-black text-sm text-white font-bold shadow-[2px_2px_0_#000] ${
+                      typeColors[moveData?.type || ""] || "bg-gray-500"
+                    }`}
+                  >
+                    {moveName}
+                    <button
+                      onClick={() => handleRemoveMove(moveName)}
+                      className="ml-1 hover:opacity-80 font-bold cursor-pointer"
+                    >
+                      ✖
+                    </button>
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Modern theme
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-bold text-blue-700">💥 Search for Moves!! 💥</h2>
+      <h2 className="text-lg font-semibold text-gray-800">Search Moves</h2>
 
       <div className="relative">
         <input
@@ -81,27 +167,27 @@ export function MoveSearch({
             setShowDropdown(true);
           }}
           onFocus={() => setShowDropdown(true)}
-          placeholder="Type a move name..."
-          className="retro-input w-full px-3 py-2 text-black"
+          placeholder="Search for a move..."
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
         />
         {showDropdown && filteredMoves.length > 0 && (
-          <ul className="absolute z-10 w-full mt-1 bg-white border-2 border-black max-h-60 overflow-auto shadow-[4px_4px_0_#000]">
+          <ul className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-auto">
             {filteredMoves.map((move) => (
               <li
                 key={move.id}
                 onClick={() => handleAddMove(move.name)}
-                className="px-3 py-2 cursor-pointer hover:bg-yellow-300 flex items-center justify-between border-b border-gray-300"
+                className="px-4 py-2 cursor-pointer hover:bg-purple-50 transition-colors flex items-center justify-between"
               >
-                <span className="font-bold">{move.name}</span>
+                <span>{move.name}</span>
                 <div className="flex items-center gap-2">
                   <span
-                    className={`px-2 py-0.5 border border-black text-xs text-white font-bold ${
+                    className={`px-2 py-0.5 rounded text-xs text-white ${
                       typeColors[move.type] || "bg-gray-500"
                     }`}
                   >
                     {move.type}
                   </span>
-                  <span className="text-xs font-bold text-gray-700">{move.category}</span>
+                  <span className="text-xs text-gray-500">{move.category}</span>
                 </div>
               </li>
             ))}
@@ -111,25 +197,25 @@ export function MoveSearch({
 
       {selectedMoves.length > 0 && (
         <div className="space-y-2">
-          <div className="flex items-center justify-between bg-purple-200 border-2 border-purple-500 px-2 py-1">
-            <span className="text-sm font-bold text-purple-800">
-              ✨ {selectedMoves.length} move{selectedMoves.length !== 1 ? "s" : ""}{" "}
-              selected!! ✨
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-gray-600">
+              {selectedMoves.length} move{selectedMoves.length !== 1 ? "s" : ""}{" "}
+              selected
             </span>
             <button
               onClick={handleClearAll}
-              className="text-sm text-red-600 hover:text-red-800 font-bold cursor-pointer underline"
+              className="text-sm text-red-600 hover:text-red-700 font-medium cursor-pointer"
             >
-              [Clear All]
+              Clear All
             </button>
           </div>
-          <div className="flex flex-wrap gap-2 p-2 bg-gradient-to-b from-yellow-100 to-yellow-200 border-2 border-yellow-400">
+          <div className="flex flex-wrap gap-2">
             {selectedMoves.map((moveName) => {
               const moveData = getSelectedMoveData(moveName);
               return (
                 <span
                   key={moveName}
-                  className={`inline-flex items-center gap-1 px-2 py-1 border-2 border-black text-sm text-white font-bold shadow-[2px_2px_0_#000] ${
+                  className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm text-white ${
                     typeColors[moveData?.type || ""] || "bg-gray-500"
                   }`}
                 >
@@ -138,7 +224,7 @@ export function MoveSearch({
                     onClick={() => handleRemoveMove(moveName)}
                     className="ml-1 hover:opacity-80 font-bold cursor-pointer"
                   >
-                    ✖
+                    ×
                   </button>
                 </span>
               );

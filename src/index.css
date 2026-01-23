@@ -1,7 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap");
 @import "tailwindcss";
 
-/* Retro MySpace/Geocities Styling */
+/* ============================================
+   MODERN THEME (Default)
+   ============================================ */
+
+body.modern-theme {
+  font-family: "Inter", system-ui, sans-serif;
+  background: #f3f4f6;
+  min-height: 100vh;
+}
+
+/* ============================================
+   RETRO THEME (MySpace/Geocities)
+   ============================================ */
+
 :root {
   --neon-pink: #ff00ff;
   --neon-cyan: #00ffff;
@@ -11,11 +25,8 @@
   --electric-blue: #0000ff;
 }
 
-* {
+body.retro-theme {
   font-family: "Comic Neue", "Comic Sans MS", cursive, sans-serif;
-}
-
-body {
   background: #000033;
   background-image: radial-gradient(
       white,
@@ -31,6 +42,11 @@ body {
   background-size: 550px 550px, 350px 350px, 250px 250px;
   background-position: 0 0, 40px 60px, 130px 270px;
   min-height: 100vh;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Ctext y='24' font-size='24'%3E⭐%3C/text%3E%3C/svg%3E"), auto;
+}
+
+body.retro-theme * {
+  font-family: "Comic Neue", "Comic Sans MS", cursive, sans-serif;
 }
 
 /* Marquee animation */
